@@ -1,1 +1,1 @@
-# Horizon-Connect
+# ConnectHub
