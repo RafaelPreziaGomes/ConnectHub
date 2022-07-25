@@ -1,6 +1,13 @@
 //  requirements
 
 // file system build in module to read and write information to the data
+// require express
+
+const express = require("express");
+
+// setup express app
+
+const app = express();
 const fs = require("fs");
 // url build in module to route the user
 const url = require("url");
@@ -30,6 +37,27 @@ const server = http.createServer(function (req, res) {
   });
   //   }
 });
+
+// require all routes
+const groupsRoute = require("./routes/groupsRoutes");
+const userRoute = require("./routes/usersRoutes");
+// gets all initial files on views folder
+
+//  user views engine
+
+app.set("view engine", "ejs");
+
+app.get("/", (req, res) => {
+  // set up to get all templates within the views folder
+  res.render("index");
+});
+
+// sets up json parser
+app.use(express.json());
+
+// route api routes to /api/
+app.use("/api/", userRoute);
+app.use("/api/", groupsRoute);
 
 server.listen((port = 3000), () => {
   console.log(`Server running at http://localhost:${port}/`);

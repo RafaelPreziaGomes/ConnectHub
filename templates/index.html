@@ -18,34 +18,24 @@
     <h3>The place to connect without showing ur face</h3>
   </header>
 
-  <section id="photo-dump-section">
-    <h2>Photo Dump</h2>
-    <div id="photo-dump">
-      <p id="selectedFile"></p>
-      <img src="" />
-    </div>
-    <input type="file" id="real-file" hidden="hidden" />
-    <button id="dump-btn">dump picture</button>
-  </section>
-
   <section id="chat-section">
     <h2>Chat</h2>
 
-    <div id="chat">
-      <div id="chat-box">
-        <input
-          type="text"
-          id="chat-input"
-          name="chat-message"
-          required
-          minlength="4"
-          maxlength="250"
-          size="77"
-        />
-      </div>
+    <div id="chat" class="scrollable">
+      <div id="chat-box"></div>
     </div>
   </section>
-
+  <div class="chat-input">
+    <input
+      type="text"
+      id="chat-input"
+      name="chat-message"
+      required
+      minlength="4"
+      maxlength="250"
+      size="77"
+    />
+  </div>
   <button id="btn">submit text</button>
 
   <div></div>
@@ -159,59 +149,42 @@
       margin: 7px;
     }
 
+    .chat-input {
+      position: relative;
+      bottom: 750px;
+    }
+
     .textContainer {
       background-color: white;
       display: inline-block;
       padding: 15px;
       border-radius: 10px;
     }
+    .scrollable {
+      overflow-y: scroll;
+      height: 100%;
+    }
 
     /* Media Queries */
   </style>
   <script>
-    //  add a click event listener to the button
-    document.querySelector("#dump-btn").addEventListener("click", () => {
-      // if the button is clicked get the value of the realfile button and click it
-
-      document.querySelector("#real-file").click();
-    });
-
-    //  if realfilebtn is clicked check to see if its value is set
-
-    document
-      .querySelector("#real-file")
-      .addEventListener("change", function () {
-        if (
-          document
-            .querySelector("#real-file")
-            .value.slice(
-              document.querySelector("#real-file").value.length - 3,
-              document.querySelector("#real-file").value.length
-            ) === "png"
-        ) {
-          document.querySelector("#selectedFile").textContent =
-            document.querySelector("#real-file").value;
-          var uploadedImage = "";
-          const reader = new FileReader();
-          reader.addEventListener("load", () => {
-            uploadedImage = reader.result;
-            document.querySelector("img").style.backgroundImage = url(
-              `${uploadedImage}`
-            );
-          });
-          document
-            .querySelector("img")
-            .setAttribute(
-              "src",
-              document.querySelector("#selectedFile").textContent
-            );
-        } else {
-          document.querySelector("#selectedFile").textContent =
-            "No File Chosen";
-        }
-      });
-
-    // select submit text button, add a click event listener to it
+    //  create a function to get all messages from the database
+    function getMessages() {
+      fetch("/api/groups")
+        .then(function (response) {
+          return response.json();
+        })
+        .then(function (data) {
+          console.log(data);
+          for (let i = 0; i < data.length; i++) {
+            let message = data[i];
+            let messageDiv = document.createElement("div");
+            messageDiv.className = "textContainer";
+            messageDiv.innerHTML = "<p>" + message.message + "</p>";
+            document.getElementById("chat-box").appendChild(messageDiv);
+          }
+        });
+    }
 
     document.querySelector("#btn").addEventListener("click", () => {
       var text = document.querySelector("#chat-input").value;
