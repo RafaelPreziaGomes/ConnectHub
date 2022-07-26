@@ -176,17 +176,30 @@
         })
         .then(function (data) {
           console.log(data);
-          for (let i = 0; i < data.length; i++) {
-            let message = data[i];
-            let messageDiv = document.createElement("div");
-            messageDiv.className = "textContainer";
-            messageDiv.innerHTML = "<p>" + message.message + "</p>";
-            document.getElementById("chat-box").appendChild(messageDiv);
+          var groups = data.data.groups;
+          console.log(groups);
+          for (let i = 0; i < groups.length; i++) {
+            let message = groups[i].message;
+            
+            var textDiv = document.createElement("div");
+      textDiv.setAttribute("class", "textDiv");
+      var textContainer = document.createElement("p");
+      textContainer.setAttribute("class", "textContainer");
+      textContainer.innerHTML = "<p>" + message + "</p>";
+      textDiv.appendChild(textContainer);
+
+      document.getElementById("chat-box").appendChild(textDiv);            
           }
         });
     }
 
+
     document.querySelector("#btn").addEventListener("click", () => {
+      function chatUpload() {
+        fetch('/api/groups', {
+          method: 'POST'
+        })
+      }
       var text = document.querySelector("#chat-input").value;
       var textDiv = document.createElement("div");
       textDiv.setAttribute("class", "textDiv");
@@ -196,5 +209,9 @@
       textDiv.appendChild(textContainer);
       document.querySelector("#chat-box").appendChild(textDiv);
     });
+
+
+
+    getMessages();
   </script>
 </body>
