@@ -180,27 +180,37 @@
           console.log(groups);
           for (let i = 0; i < groups.length; i++) {
             let message = groups[i].message;
-            
-            var textDiv = document.createElement("div");
-      textDiv.setAttribute("class", "textDiv");
-      var textContainer = document.createElement("p");
-      textContainer.setAttribute("class", "textContainer");
-      textContainer.innerHTML = "<p>" + message + "</p>";
-      textDiv.appendChild(textContainer);
 
-      document.getElementById("chat-box").appendChild(textDiv);            
+            var textDiv = document.createElement("div");
+            textDiv.setAttribute("class", "textDiv");
+            var textContainer = document.createElement("p");
+            textContainer.setAttribute("class", "textContainer");
+            textContainer.innerHTML = "<p>" + message + "</p>";
+            textDiv.appendChild(textContainer);
+
+            document.getElementById("chat-box").appendChild(textDiv);
           }
         });
     }
 
-
     document.querySelector("#btn").addEventListener("click", () => {
-      function chatUpload() {
-        fetch('/api/groups', {
-          method: 'POST'
-        })
-      }
       var text = document.querySelector("#chat-input").value;
+
+      // create function to send message to the database
+      function sendMessage(text) {
+        fetch("/api/groups", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            message: text,
+          }),
+        });
+      }
+
+      sendMessage(text);
+
       var textDiv = document.createElement("div");
       textDiv.setAttribute("class", "textDiv");
       var textContainer = document.createElement("p");
@@ -209,8 +219,6 @@
       textDiv.appendChild(textContainer);
       document.querySelector("#chat-box").appendChild(textDiv);
     });
-
-
 
     getMessages();
   </script>
