@@ -17,16 +17,14 @@ const http = require("http");
 const path = require("path");
 // create a server
 
-
-
 // require all routes
 const groupsRoute = require("./routes/groupsRoutes");
 const userRoute = require("./routes/usersRoutes");
 // gets all initial files on views folder
 
 //  user views engine
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'templates/index.html'));
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "templates/index.html"));
 });
 
 // sets up json parser
@@ -36,6 +34,4 @@ app.use(express.json());
 app.use("/api/", userRoute);
 app.use("/api/", groupsRoute);
 
-app.listen((port = 3000), () => {
-  console.log(`Server running at http://localhost:${port}/`);
-});
+module.exports = app;
